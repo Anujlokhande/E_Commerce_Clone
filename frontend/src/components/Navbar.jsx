@@ -10,8 +10,9 @@ import {
   removeItem,
 } from "../redux/cart/cartSlice";
 import { addOrder } from "../redux/order/orderSlice";
+import { setCategory } from "../redux/category/categorySlice";
 
-const category = ["Clothes", "Electronics", "Furnitures", "Toys"];
+const category = ["Clothe", "Electronics", "Furniture", "Toy"];
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -52,12 +53,20 @@ const Navbar = () => {
         <span className="text-xl text-black font-semibold">Shopi</span>
         <p
           className="text-sm text-gray-600 cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={() => {
+            (dispatch(setCategory("All")), navigate("/"));
+          }}
         >
           All
         </p>
         {category.map((cat) => (
-          <p key={cat} className="text-gray-600 cursor-pointer">
+          <p
+            key={cat}
+            className="text-gray-600 cursor-pointer"
+            onClick={() => {
+              dispatch(setCategory(cat));
+            }}
+          >
             {cat}
           </p>
         ))}

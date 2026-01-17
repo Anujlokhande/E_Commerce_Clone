@@ -6,13 +6,14 @@ import { setProducts } from "../redux/products/productsSlice";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState("All");
+
   const [searchTitle, setSearchTitle] = useState("");
   const searchRef = useRef(null);
   const dispatch = useDispatch();
 
   const { products } = useSelector((state) => state.products);
-  // console.log(products);
+  const { category } = useSelector((state) => state.category);
+  console.log(products);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,12 +26,18 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const searchedProducts = products.filter((p) =>
-    p.title.toLowerCase().includes(searchTitle.toLowerCase()),
-  );
+  const searchedProducts = products.filter((p) => {
+    const matchSearch = p.title
+      .toLowerCase()
+      .includes(searchTitle.toLowerCase());
+    const matchCategory =
+      category === "All" ||
+      p.category?.name.toLowerCase() === category.toLowerCase();
+    return matchSearch && matchCategory;
+  });
 
   return (
-    <div className="flex flex-col justify-center items-center w-full min-h-screen p-4 bg-white">
+    <div className="flex flex-col justify-center items-center w-full min-h-screen p-4 bg-white ">
       <div className="flex flex-col justify-center items-center gap-4 mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Home</h1>
         <input
@@ -50,9 +57,13 @@ const Home = () => {
             <p>Loading...</p>
           ) : (
             <>
-              {searchedProducts.map((product, idx) => (
-                <ProductCard key={idx} product={product} />
-              ))}
+              {searchedProducts.length == 0 ? (
+                <p>No Item Found</p>
+              ) : (
+                searchedProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))
+              )}
             </>
           )}
         </div>
