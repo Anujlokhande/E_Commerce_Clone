@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { addItem } from "../redux/cart/cartSlice";
+import { addItem, calculateTotals } from "../redux/cart/cartSlice";
 
 const Product = () => {
   const { id } = useParams();
@@ -32,8 +32,8 @@ const Product = () => {
 
   const handleAddToCart = () => {
     dispatch(addItem(product));
+    dispatch(calculateTotals());
     setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
   };
 
   if (loading) {
@@ -94,13 +94,11 @@ const Product = () => {
 
             <button
               onClick={handleAddToCart}
-              className={`w-full font-bold py-3 px-6 rounded-lg transition text-lg ${
-                addedToCart
-                  ? "bg-green-600 hover:bg-green-700 text-white"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              }`}
+              className={
+                "w-full font-bold py-3 px-6 rounded-lg transition text-lg bg-blue-600 hover:bg-blue-700 text-white"
+              }
             >
-              {addedToCart ? "✓ Added to Cart" : "Add to Cart"}
+              {addedToCart ? "Added to Cart" : "Add to Cart"}
             </button>
           </div>
         </div>

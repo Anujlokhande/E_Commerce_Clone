@@ -9,7 +9,7 @@ const Home = () => {
   const dispatch = useDispatch();
 
   const { products } = useSelector((state) => state.products);
-  console.log(products);
+  // console.log(products);
 
   useEffect(() => {
     const fetchData = async () => {
