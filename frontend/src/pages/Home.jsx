@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,9 @@ import { setProducts } from "../redux/products/productsSlice";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState("All");
+  const [searchTitle, setSearchTitle] = useState("");
+  const searchRef = useRef(null);
   const dispatch = useDispatch();
 
   const { products } = useSelector((state) => state.products);
@@ -22,12 +25,20 @@ const Home = () => {
     fetchData();
   }, []);
 
+  const searchedProducts = products.filter((p) =>
+    p.title.toLowerCase().includes(searchTitle.toLowerCase()),
+  );
+
   return (
     <div className="flex flex-col justify-center items-center w-full min-h-screen p-4 bg-white">
       <div className="flex flex-col justify-center items-center gap-4 mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Home</h1>
         <input
           type="text"
+          ref={searchRef}
+          onChange={() => {
+            setSearchTitle(searchRef.current.value);
+          }}
           placeholder="Search products..."
           className="w-full max-w-md p-3 border-2 border-gray-300 rounded-lg "
         />
@@ -39,7 +50,7 @@ const Home = () => {
             <p>Loading...</p>
           ) : (
             <>
-              {products.map((product, idx) => (
+              {searchedProducts.map((product, idx) => (
                 <ProductCard key={idx} product={product} />
               ))}
             </>
