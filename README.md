@@ -1,10 +1,10 @@
 # E-Commerce UI Clone – Shopi
 
 ## Description
-
+A responsive e-commerce web app built with React that showcases products from the Platzi Fake Store API. Users can browse products, view details, manage their cart, and proceed through a basic checkout flow
 
 ## Live Demo
-[Deployed Link]
+https://e-commerce-clone-rose.vercel.app/
 
 ## 🛠 Tech Stack
 - Vite + React
@@ -45,9 +45,9 @@ frontend/
 VITE_CLERK_PUBLISHABLE_KEY=your_key_here
 
 ## Installation & Setup
-git clone <repo-url>
-cd frontend
-npm install
-npm run dev
+- git clone https://github.com/Anujlokhande/E_Commerce_Clone.git
+- cd frontend
+- npm install
+- npm run dev
 
 
