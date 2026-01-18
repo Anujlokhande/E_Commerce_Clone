@@ -51,6 +51,8 @@ const Navbar = () => {
     };
     dispatch(addOrder(newOrder));
     dispatch(clearCart());
+    cartSlide(false);
+    navigate("/my-orders");
   };
 
   return (
