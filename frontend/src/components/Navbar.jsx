@@ -1,4 +1,4 @@
-import { RiCloseLine, RiShoppingCartFill } from "@remixicon/react";
+import { RiCloseLine, RiShoppingCartFill, RiMenu3Line } from "@remixicon/react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -12,14 +12,19 @@ import {
 import { addOrder } from "../redux/order/orderSlice";
 import { setCategory } from "../redux/category/categorySlice";
 
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
+
 const category = ["Clothe", "Electronics", "Furniture", "Toy"];
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [cartSlide, setCartSlide] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
 
   const { items, totalItems, totalPrice } = useSelector((state) => state.cart);
+
+  const { user } = useUser();
 
   const handleRemove = (id) => {
     dispatch(removeItem(id));
@@ -47,43 +52,110 @@ const Navbar = () => {
     dispatch(addOrder(newOrder));
     dispatch(clearCart());
   };
+
   return (
     <div className="w-full h-16 border-b-2 border-gray-300/60 p-5 flex justify-between items-center sticky top-0 bg-white">
       <div className="flex items-center gap-4 relative">
-        <span className="text-xl text-black font-semibold">Shopi</span>
-        <p
-          className="text-sm text-gray-600 cursor-pointer"
+        <span
+          className="text-xl hidden lg:flex text-black font-semibold cursor-pointer "
           onClick={() => {
-            (dispatch(setCategory("All")), navigate("/"));
+            dispatch(setCategory("All"));
+          }}
+        >
+          Shopi
+        </span>
+
+        <p
+          className="hidden md:block text-sm text-gray-600 cursor-pointer"
+          onClick={() => {
+            dispatch(setCategory("All"));
+            navigate("/");
           }}
         >
           All
         </p>
+
         {category.map((cat) => (
           <p
             key={cat}
-            className="text-gray-600 cursor-pointer"
-            onClick={() => {
-              dispatch(setCategory(cat));
-            }}
+            className="hidden md:block text-gray-600 cursor-pointer"
+            onClick={() => dispatch(setCategory(cat))}
           >
             {cat}
           </p>
         ))}
+
+        <div className="md:hidden relative">
+          <RiMenu3Line
+            className="text-2xl cursor-pointer"
+            onClick={() => setMobileMenu(!mobileMenu)}
+          />
+
+          {mobileMenu && (
+            <div className="absolute top-10 left-0 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+              <div className="flex flex-col p-4 gap-3">
+                <p
+                  className="text-sm text-gray-600 cursor-pointer hover:text-black"
+                  onClick={() => {
+                    dispatch(setCategory("All"));
+                    navigate("/");
+                    setMobileMenu(false);
+                  }}
+                >
+                  All
+                </p>
+                {category.map((cat) => (
+                  <p
+                    key={cat}
+                    className="text-sm text-gray-600 cursor-pointer hover:text-black"
+                    onClick={() => {
+                      dispatch(setCategory(cat));
+                      setMobileMenu(false);
+                    }}
+                  >
+                    {cat}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="flex justify-between items-center gap-4">
-        <span className="text-gray-600 text-sm">userintheapp@test.com</span>
-        <span className="cursor-pointer" onClick={() => navigate("/my-orders")}>
-          My Orders
-        </span>
-        <span className="cursor-pointer">My Account</span>
+      <SignedOut>
+        <button
+          className="text-gray-600 text-sm cursor-pointer"
+          onClick={() => navigate("/sign-in")}
+        >
+          Sign In
+        </button>
+      </SignedOut>
 
-        <span className="flex justify-center items-center gap-2 cursor-pointer">
-          <RiShoppingCartFill onClick={() => setCartSlide(true)} />
-          {totalItems}
-        </span>
-      </div>
+      <SignedIn>
+        <div className="flex justify-between items-center gap-4">
+          <span className=" hidden md:block text-gray-600 text-sm">
+            {user?.primaryEmailAddress?.emailAddress}
+          </span>
+
+          <span
+            className="cursor-pointer"
+            onClick={() => navigate("/my-orders")}
+          >
+            My Orders
+          </span>
+
+          <span className="flex justify-center items-center gap-2 cursor-pointer">
+            <RiShoppingCartFill onClick={() => setCartSlide(true)} />
+            {totalItems}
+          </span>
+
+          <UserButton />
+        </div>
+
+        {/* <div className="md:hidden">
+          <UserButton />
+        </div> */}
+      </SignedIn>
 
       {cartSlide && (
         <div className="absolute right-0 top-16 min-h-screen border border-black rounded-xl bg-white w-[30%]">
@@ -105,7 +177,7 @@ const Navbar = () => {
                   className="flex justify-between items-center p-4 border-b border-gray-300/60"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="h-20 w-20  bg-amber-50">
+                    <div className="h-20 w-20 bg-amber-50">
                       <img
                         src={item.image}
                         alt={item.title}
@@ -135,11 +207,13 @@ const Navbar = () => {
                 </div>
               ))
             )}
+
             <div className="p-4">
-              <div className="p-4 flex justify-between font-medium ">
+              <div className="p-4 flex justify-between font-medium">
                 <span>Total:</span>
                 <span>${totalPrice ? totalPrice : 0}</span>
               </div>
+
               <button
                 className="w-full border rounded-xl bg-gray-500 text-white h-10"
                 onClick={handleCheckout}

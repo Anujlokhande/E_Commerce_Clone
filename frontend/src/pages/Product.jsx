@@ -53,7 +53,7 @@ const Product = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white p-4">
+    <div className="max-h-screen bg-white p-4">
       <div className="max-w-6xl mx-auto">
         <button
           onClick={() => navigate(-1)}
