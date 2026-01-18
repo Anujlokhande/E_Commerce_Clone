@@ -45,9 +45,9 @@ frontend/
 VITE_CLERK_PUBLISHABLE_KEY=your_key_here
 
 ## Installation & Setup
-git clone <repo-url>
-cd frontend
-npm install
-npm run dev
+- git clone https://github.com/Anujlokhande/E_Commerce_Clone.git
+- cd frontend
+- npm install
+- npm run dev
 
 
