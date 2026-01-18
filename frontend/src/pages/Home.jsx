@@ -13,7 +13,7 @@ const Home = () => {
 
   const { products } = useSelector((state) => state.products);
   const { category } = useSelector((state) => state.category);
-  console.log(products);
+  // console.log(products);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -6,7 +6,7 @@ const MyOrder = () => {
   const { id } = useParams();
   const { orders } = useSelector((state) => state.order);
   const order = orders.find((o) => String(o.id) === String(id));
-  console.log(order);
+  // console.log(order);
 
   const navigate = useNavigate();
   if (!order) {
