@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { addItem, calculateTotals } from "../redux/cart/cartSlice";
+import { useUser } from "@clerk/clerk-react";
 
 const Product = () => {
   const { id } = useParams();
@@ -11,6 +12,7 @@ const Product = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [addedToCart, setAddedToCart] = useState(false);
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -92,14 +94,16 @@ const Product = () => {
               <p className="text-5xl font-bold">${product?.price}</p>
             </div>
 
-            <button
-              onClick={handleAddToCart}
-              className={
-                "w-full font-bold py-3 px-6 rounded-lg transition text-lg bg-blue-600 hover:bg-blue-700 text-white"
-              }
-            >
-              {addedToCart ? "Added to Cart" : "Add to Cart"}
-            </button>
+            {user && (
+              <button
+                onClick={handleAddToCart}
+                className={
+                  "w-full font-bold py-3 px-6 rounded-lg transition text-lg bg-blue-600 hover:bg-blue-700 text-white"
+                }
+              >
+                {addedToCart ? "Added to Cart" : "Add to Cart"}
+              </button>
+            )}
           </div>
         </div>
       </div>
